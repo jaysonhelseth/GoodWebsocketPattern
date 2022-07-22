@@ -7,17 +7,44 @@
 <body>
     <h1>Welcome!</h1>
     <pre id="statusArea"></pre>
+    <a href="/next.html">Next</a>
     <script>
         var statusArea = document.getElementById("statusArea");
-        var conn = new WebSocket("ws://localhost:8088/ws")
+        var conn = new WebSocket("ws://localhost:8088/ws");
+        var max = 5;
+        var count = 0;
 
-        conn.onclose = function(event) {
-            statusArea.textContent = "Connection closed.";
+        function connect() {
+            try {
+                conn = new WebSocket("ws://localhost:8088/ws");
+
+                conn.onclose = function (event) {
+                    statusArea.textContent = "Connection closed.";
+                    myReset();
+                }
+
+                conn.onmessage = function (event) {
+                    statusArea.textContent = event.data;
+                }
+
+                return true;
+            }
+            catch (e) {
+                console.log("Failed to connect.");
+                return false;
+            }
+        }
+        connect();
+
+
+        function myReset() {
+            var timer = setInterval(() => {
+                if (connect()) {
+                    clearInterval(timer);
+                }
+            }, 1000)
         }
 
-        conn.onmessage = function(event) {
-            statusArea.textContent = event.data;
-        }
     </script>
 </body>
 </html>
