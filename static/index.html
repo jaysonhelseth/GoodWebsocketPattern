@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <pre id="statusArea"></pre>
+    <script>
+        var statusArea = document.getElementById("statusArea");
+        var conn = new WebSocket("ws://localhost:8088/ws")
+
+        conn.onclose = function(event) {
+            statusArea.textContent = "Connection closed.";
+        }
+
+        conn.onmessage = function(event) {
+            statusArea.textContent = event.data;
+        }
+    </script>
+</body>
+</html>
